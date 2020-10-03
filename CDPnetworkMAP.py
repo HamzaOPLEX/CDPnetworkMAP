@@ -7,7 +7,6 @@ from pprint import pprint
 from colorama import *
 import argparse
 
-import time
 import signal
 signal.signal(signal.SIGPIPE, signal.SIG_DFL)  # IOError: Broken pipe
 signal.signal(signal.SIGINT, signal.SIG_DFL)  # KeyboardInterrupt: Ctrl-C
