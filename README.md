@@ -46,8 +46,8 @@ all device configuration will add to Hosts.yaml
 
 ## running the script :
 
-- Show Help : ```$python CDPnetworkMAP.py -h```
-- run Basic CDP Discovery : ```$python CDPnetworkMAP.py -D```
-- run Detailed CDP Discovery : ```$python CDPnetworkMAP.py -h```
+- Show Help : ```$python3 CDPnetworkMAP.py -h```
+- run Basic CDP Discovery : ```$python3 CDPnetworkMAP.py -B```
+- run Detailed CDP Discovery : ```$python3 CDPnetworkMAP.py -D```
 
 Enjoy :)
