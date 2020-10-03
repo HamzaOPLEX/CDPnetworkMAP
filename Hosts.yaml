@@ -1,0 +1,12 @@
+# entring enable mode
+hosts :
+  R1 :
+    host : 172.16.0.1
+
+# Default information here
+default :
+  username : Admin
+  use_keys : True
+  device_type : cisco_ios
+  enabled :
+    secret : Admin_secret
