@@ -24,11 +24,25 @@ let say we have 3 cisco routers , you need to configure ssh connection informati
 
 all device configuration will add to Hosts.yaml
 
-1 - Hosts.yaml options 
+#### 1-Hosts.yaml options :
+  - host = ip address of the device (require)
+  - username = ssh username (require)
+  - password = ssh password (not require if you use ssh key based authentication)
+  - use_key  = True/False (not require if you use ssh password authentication )
+  - device_type = cisco_ios for cisco (require)
+  - port = default is 22 (not require)
+  - key_file = default is "~/.ssh/id_rsa.pub" (require if you have the ssh pub key in diffrent location)
 
+#### 2-Hosts.yaml SSH Password Based Authentication :
 
+![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/PasswordBasedAuthentication.png)
 
+#### 3-Hosts.yaml key Based Authentication :
 
+![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/keyBasedAuthentication.png)
+
+#### 4-Hosts.yaml Enable Mode:
+![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/enablemode.png)
 
 
 man_astronaut Show your support
