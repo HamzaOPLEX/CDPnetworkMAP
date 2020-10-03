@@ -39,7 +39,7 @@ all device configuration will add to Hosts.yaml
 
 #### 3-Hosts.yaml key Based Authentication :
 
-![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/keyBasedAuthentication.png)
+![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/KeyBasedAuthentication.png)
 
 #### 4-Hosts.yaml Enable Mode:
 ![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/enablemode.png)
