@@ -24,7 +24,7 @@ let say we have 3 cisco routers , you need to configure ssh connection informati
 
 all device configuration will add to Hosts.yaml
 
-#### 1-Hosts.yaml options :
+####    1-Hosts.yaml options :
   - host = ip address of the device (require)
   - username = ssh username (require)
   - password = ssh password (not require if you use ssh key based authentication)
@@ -33,19 +33,21 @@ all device configuration will add to Hosts.yaml
   - port = default is 22 (not require)
   - key_file = default is "~/.ssh/id_rsa.pub" (require if you have the ssh pub key in diffrent location)
 
-#### 2-Hosts.yaml SSH Password Based Authentication :
+####    2-Hosts.yaml SSH Password Based Authentication :
 
 ![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/PasswordBasedAuthentication.png)
 
-#### 3-Hosts.yaml key Based Authentication :
+####    3-Hosts.yaml key Based Authentication :
 
 ![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/KeyBasedAuthentication.png)
 
-#### 4-Hosts.yaml Enable Mode:
+####    4-Hosts.yaml Enable Mode:
 ![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/enablemode.png)
 
+## running the script :
 
-man_astronaut Show your support
-Give a star if this project helped you 
+- Show Help : ``$ python CDPnetworkMAP.py -h```
+- run Basic CDP Discovery : ``$ python CDPnetworkMAP.py -D```
+- run Detailed CDP Discovery : ``$ python CDPnetworkMAP.py -h```
 
 Enjoy :)
