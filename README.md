@@ -15,3 +15,9 @@ CDP network Discover and output Information Parser
 - $ sudo pip3 install -r requirements.txt
 
 # Configuration :
+
+this script is connect to devices that you will provide there SSH connection information (username , device_type , password or use_key ...) and retrive the CDP information.
+all Devices information will write to Host.yaml
+
+
+
