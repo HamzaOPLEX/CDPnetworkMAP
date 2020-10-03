@@ -10,8 +10,8 @@ CDP network Discover and output Information Parser
 
 # Instalation :
 
-1- $ git clone https://github.com/HamzaOPLEX/CDPnetworkMAP
-2- $ cd CDPnetworkMAP
-3- $ sudo pip3 install -r requirements.txt
+- $ git clone https://github.com/HamzaOPLEX/CDPnetworkMAP
+- $ cd CDPnetworkMAP
+- $ sudo pip3 install -r requirements.txt
 
 # Configuration :
