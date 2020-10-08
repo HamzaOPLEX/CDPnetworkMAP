@@ -35,19 +35,20 @@ all device configuration will add to Hosts.yaml
 
 ####    2-Hosts.yaml SSH Password Based Authentication :
 
-![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/PasswordBasedAuthentication.png)
+![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/img/PasswordBasedAuthentication.png)
 
 ####    3-Hosts.yaml key Based Authentication :
 
-![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/KeyBasedAuthentication.png)
+![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/img/KeyBasedAuthentication.png)
 
 ####    4-Hosts.yaml Enable Mode:
-![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/enablemode.png)
+![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/img/enablemode.png)
 
 ## running the script :
 
 - Show Help : ```$python3 CDPnetworkMAP.py -h```
 - run Basic CDP Discovery : ```$python3 CDPnetworkMAP.py -B```
 - run Detailed CDP Discovery : ```$python3 CDPnetworkMAP.py -D```
+- Generat a Grafical Network Topology : ```$python3 CDPnetworkMAP.py -T```
 
 Enjoy :)
