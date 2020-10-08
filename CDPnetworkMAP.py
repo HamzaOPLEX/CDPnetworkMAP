@@ -1,11 +1,5 @@
-from netmiko import ConnectHandler
-from prettytable import PrettyTable
-import socket
 import sys
-import yaml
 from pprint import pprint
-from colorama import *
-import argparse
 
 import signal
 signal.signal(signal.SIGPIPE, signal.SIG_DFL)  # IOError: Broken pipe
@@ -16,6 +10,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)  # KeyboardInterrupt: Ctrl-C
 
 class CdpNetMap:
     def __init__(self,Hosts='./Hosts.yaml') :
+        import yaml
         self.Hosts = Hosts
         self.KNOWNKEYS = ['host','username','password','device_type']
         self.NONE_NETMIKO_KEYS = ['use_keys','enabled','port','timeout',"key_file"]
@@ -37,9 +32,10 @@ class CdpNetMap:
             Hosts = self.YAMLdevices['hosts']
             ListHosts = list(Hosts.keys())
             for host in ListHosts:
+                KEYS = list(Hosts[host].keys())
                 self.DEVICE_INFO[host] = {}
                 self.DEVICE_OPTIONS[host] = {}
-                for key in list(Hosts[host].keys()) :
+                for key in KEYS:
                     if key in self.KNOWNKEYS :
                         self.DEVICE_INFO[host][key] = Hosts[host][key]
                     elif key in self.NONE_NETMIKO_KEYS :
@@ -51,17 +47,15 @@ class CdpNetMap:
             print(self.Messages(f'[!] Err in Hosts.yaml , we can\'t read Hosts\n{err}','ERROR'))
     def StructerDEFAULT(self):
         Default = self.YAMLdevices['default']
-        for host in list(self.DEVICE_INFO.keys()):
+        Hosts = list(self.DEVICE_INFO.keys())
+        for host in Hosts:
             HOST = self.DEVICE_INFO[host]
             self.DEVICE_OPTIONS[host]
             HOSTKEYS = list(HOST.keys())
-            for option in list(Default.keys()) :
-                optionNAME = option
-                if optionNAME in self.KNOWNKEYS :
-                    if optionNAME not in HOSTKEYS :
+            for optionNAME in list(Default.keys()) :
+                if optionNAME in self.KNOWNKEYS and optionNAME not in HOSTKEYS:
                         self.DEVICE_INFO[host][optionNAME] = Default[optionNAME]
-                elif optionNAME in self.NONE_NETMIKO_KEYS :
-                    if optionNAME not in list(self.DEVICE_OPTIONS[host].keys()) :
+                elif optionNAME in self.NONE_NETMIKO_KEYS and optionNAME not in list(self.DEVICE_OPTIONS[host].keys()):
                         self.DEVICE_OPTIONS[host][optionNAME] = Default[optionNAME]
                 else:
                     print(self.Messages(f'OPTION NOTFOUND : Host.yaml Err on Default option => "{optionNAME}"','ERROR'))
@@ -94,6 +88,8 @@ class CdpNetMap:
         elif not NOTFOUND :
             return [True,NOTFOUND]
     def CreatConnection(self,hostname,deviceinfo):
+        print(self.Messages(f'[+] Importing Module','SUCCESSFUL'))
+        from netmiko import ConnectHandler
 
         def startconnection(deviceinfo,hostname,enableMode=True):
             print(self.Messages(f'[+] Trying to Establishing SSH Connection with {hostname}','SUCCESSFUL'))
@@ -161,6 +157,7 @@ class CdpNetMap:
             print(self.Messages(f'[!] Please Check your Host.yaml : <<{CHECK[1]}>> option are missing from Host {hostname}','ERROR'))
             return False
     def BasicCDP(self):
+        from prettytable import PrettyTable
         for host in list(self.DEVICE_INFO.keys()) : 
             device = self.DEVICE_INFO[host]
             try:
@@ -187,6 +184,7 @@ class CdpNetMap:
             except Exception as err:
                 print(self.Messages(f'[!] we could not connect because :\n{err}','ERROR'))
     def DetailCDP(self):
+        from prettytable import PrettyTable
         for host in list(self.DEVICE_INFO.keys()) : 
             device = self.DEVICE_INFO[host]
             try:
@@ -225,29 +223,89 @@ class CdpNetMap:
                     pass
             except Exception as err:
                 print(self.Messages(f'[!] we could not connect because :\n{err}','ERROR'))
-
     def Messages(self,msg,type_message):
+        from colorama import Fore,Style
         if type_message == 'ERROR':
             return Fore.LIGHTRED_EX+msg+Style.RESET_ALL
         elif type_message == 'SUCCESSFUL':
             return Fore.GREEN+msg+Style.RESET_ALL
+    def TopologyGenerator(self):
+        from Topology_gen import GenTopo
+        import re
+        draw = GenTopo()
+        DictTopology = {}
+        def InterfaceNameShorter(name):
+            intname = name[0:2]
+            try : 
+                intname = intname+re.search(r'\d.*',name).group()
+            except Exception as err :
+                print(err)
+                intname = name
+            return intname
+        def HostnameShorter(name):
+            return name.split('.')[0]                
+        for host in list(self.DEVICE_INFO.keys()) : 
+            device = self.DEVICE_INFO[host]
+            try:
+                connection = self.CreatConnection(host,device)
+                if connection != False:
+                    print(self.Messages('[+] Start Refreshing CDP information','SUCCESSFUL'))
+                    connection.config_mode()
+                    connection.send_command('cdp run')
+                    connection.send_command('cdp advertise-v2')
+                    connection.exit_config_mode()
+                    print(self.Messages('[+] Start Collecting Data','SUCCESSFUL'))
+                    neighbors = connection.send_command("show cdp neighbor", use_genie=True)
+                    my_hostname = HostnameShorter(connection.find_prompt().replace('#',""))
+                    for indexNumber in list(neighbors['cdp']['index'].keys()):
+                        my_port = InterfaceNameShorter( neighbors['cdp']['index'][indexNumber]["local_interface"])
+                        next_hostname = HostnameShorter(neighbors['cdp']['index'][indexNumber]["device_id"])
+                        next_port = InterfaceNameShorter(neighbors['cdp']['index'][indexNumber]["port_id"])
+                        DictTopology[(my_hostname,my_port)] = (next_hostname,next_port)
+                        try :
+                            if DictTopology[(my_hostname,my_port)] == (next_hostname,next_port) and DictTopology[(next_hostname,next_port)] == (my_hostname,my_port):
+                                del DictTopology[(next_hostname,next_port)]
+                        except Exception as err:
+                            pass
+                elif connection == False:
+                    pass
+            except Exception as err:
+                print(self.Messages(f'[!] we could not connect because :\n{err}','ERROR'))
+        try :
+            draw.draw_topology(DictTopology)
+        except Exception as err:
+            print(err)
 
 start = CdpNetMap()
 
+def argsFunc(type):
+    if type == 'Basic' :
+        start.StructerData()
+        start.BasicCDP()
+    elif type == 'Detail':
+        start.StructerData()
+        start.DetailCDP()       
+    elif type == 'Topology':
+        start.StructerData()
+        start.TopologyGenerator()          
+
 if len(sys.argv) > 1 :
+    import argparse
 
     parser = argparse.ArgumentParser(description='CDP network Discovery')
     parser.add_argument('-B',"--Basic",help='For Basic CDP information',action='store_true')
     parser.add_argument('-D',"--Detail",help='For Detailed CDP information',action='store_true')
+    parser.add_argument('-T',"--GenerateToplogy",help='Simple Graphic Toplogy',action='store_true')
+
     args = parser.parse_args()
     if len(sys.argv) <= 2 :
         for k in args._get_kwargs() :
             if k[0] == 'Basic' and k[1]==True:
-                start.StructerData()
-                start.BasicCDP()
+                argsFunc(type='Basic')
             elif k[0]== 'Detail' and k[1]==True:
-                start.StructerData()
-                start.DetailCDP()
+                argsFunc(type='Detail')
+            elif k[0]== 'GenerateToplogy' and k[1]==True:
+                argsFunc(type='Topology')
     elif len(sys.argv) > 2 :
         print(start.Messages('[!] Please Use one Argument','ERROR'))
 else: 
