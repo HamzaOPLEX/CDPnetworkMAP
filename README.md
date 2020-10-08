@@ -49,6 +49,10 @@ all device configuration will add to Hosts.yaml
 - Show Help : ```$python3 CDPnetworkMAP.py -h```
 - run Basic CDP Discovery : ```$python3 CDPnetworkMAP.py -B```
 - run Detailed CDP Discovery : ```$python3 CDPnetworkMAP.py -D```
-- Generat a Grafical Network Topology : ```$python3 CDPnetworkMAP.py -T```
+- generate a graphical Network Topology : ```$python3 CDPnetworkMAP.py -T```
+
+## graphical Network Topology Example :
+![alt text](https://github.com/HamzaOPLEX/CDPnetworkMAP/blob/main/topologys/topology_example.png)
+
 
 Enjoy :)
