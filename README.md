@@ -18,7 +18,7 @@ $ sudo pip3 install -r requirements.txt
 
 ## How it work :
 
-let say we have 3 cisco routers , you need to configure ssh connection information for each cisco router then he retrieved the CDP information from those CDP informations .
+let say we have 3 cisco routers , you need to configure ssh connection information for each cisco router then he run show cdp command and retrieve CDP information and parse them using genie .
 
 ## configuration :
 
